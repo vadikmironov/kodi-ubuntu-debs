@@ -1,0 +1,7 @@
+--- a/debian/patches/series
++++ b/debian/patches/series
+@@ -23,4 +23,3 @@
+ workarounds/0001-Workaround-989814.patch
+ workarounds/0002-xbmc-libdvd_vfs-enen92.patch
+ workarounds/0003-pcre2.patch
+-workarounds/0004-ffmpeg7.patch

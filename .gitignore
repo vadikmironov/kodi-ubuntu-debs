@@ -1,0 +1,13 @@
+# Generated build artifacts
+build.log
+build-ubuntu*.log
+
+# Quilt/patch leftover files — generated when patches fail to apply cleanly.
+# The .orig file contains the pre-patch content; .rej contains rejected hunks.
+patches/*/*.orig
+patches/*/*.rej
+patches/*/build/
+
+# Claude Code — keep project permissions, ignore everything else
+.claude/*
+!.claude/settings.local.json

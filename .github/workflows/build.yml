@@ -1,0 +1,170 @@
+name: Build Kodi for Ubuntu LTS
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        ubuntu-version: ['24.04']
+        # To add Ubuntu 26.04: append '26.04' above and create patches/ubuntu-26.04/
+    runs-on: ubuntu-${{ matrix.ubuntu-version }}
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      id-token: write      # required for artifact attestations
+      attestations: write  # required for artifact attestations
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4 pinned
+
+      - name: Read VERSION
+        run: |
+          source VERSION
+          echo "KODI_VERSION=$KODI_VERSION" >> $GITHUB_ENV
+          echo "DEBIAN_REVISION=$DEBIAN_REVISION" >> $GITHUB_ENV
+          ubuntu_ver="${{ matrix.ubuntu-version }}"
+          echo "UBUNTU_VERSION_NODOT=${ubuntu_ver//./}" >> $GITHUB_ENV
+
+      - name: Print build environment
+        run: |
+          echo "=== Runner OS ==="
+          lsb_release -a
+          echo ""
+          echo "=== Compiler ==="
+          gcc --version
+          g++ --version
+          echo ""
+          echo "=== dpkg ==="
+          dpkg --version
+          echo ""
+          echo "=== Kodi build target ==="
+          source VERSION
+          echo "KODI_VERSION=${KODI_VERSION}  DEBIAN_REVISION=${DEBIAN_REVISION}  UBUNTU=${{ matrix.ubuntu-version }}"
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet \
+            /usr/local/.ghcup /usr/local/share/powershell \
+            /opt/hostedtoolcache
+          df -h /
+
+      - name: Workaround dpkg-genbuildinfo slowness
+        # GitHub Actions runners have large pre-installed tools in /usr/local
+        # (Android SDK, .NET, ghcup, PowerShell). dpkg-genbuildinfo scans all
+        # files to generate checksums, which takes 5-20 minutes. Moving /usr/local
+        # out of the way prevents this.
+        # See: https://github.com/actions/runner-images/issues/13150
+        run: |
+          if [ -d /usr/local ]; then
+            sudo mv /usr/local /usr/local.bak
+          fi
+
+      - name: Install base tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential devscripts debhelper dh-python \
+            dpkg-dev fakeroot lintian quilt equivs wget \
+            debian-keyring
+
+      - name: Fetch Debian source
+        run: bash scripts/fetch-source.sh
+
+      - name: Patch for Ubuntu ${{ matrix.ubuntu-version }}
+        env:
+          UBUNTU_VERSION: ${{ matrix.ubuntu-version }}
+        run: bash scripts/patch-for-ubuntu.sh
+
+      - name: Install build dependencies
+        run: |
+          cd build/kodi-${{ env.KODI_VERSION }}+dfsg/
+          sudo mk-build-deps -i -t 'apt-get -y --no-install-recommends' || {
+            echo "Warning: mk-build-deps returned non-zero, attempting recovery..." >&2
+          }
+          sudo apt-get -f install -y
+
+      - name: Build
+        run: |
+          cd build/kodi-${{ env.KODI_VERSION }}+dfsg/
+          dpkg-buildpackage -us -uc -b -j$(nproc) 2>&1 | tee ../../build.log
+
+      - name: Collect .deb files
+        run: |
+          mkdir -p output
+          cp build/*.deb output/ 2>/dev/null || true
+          ls -lh output/
+
+      - name: Attest build provenance
+        if: success()
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2 pinned
+        with:
+          subject-path: output/*.deb
+
+      - name: Upload .deb artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
+        with:
+          name: kodi-${{ env.KODI_VERSION }}-ubuntu${{ env.UBUNTU_VERSION_NODOT }}-debs
+          path: output/*.deb
+          retention-days: 30
+
+      - name: Rename build log
+        if: always()
+        run: mv build.log build-ubuntu${{ env.UBUNTU_VERSION_NODOT }}.log || true
+
+      - name: Upload build logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
+        with:
+          name: build-logs-ubuntu${{ env.UBUNTU_VERSION_NODOT }}
+          path: build-ubuntu${{ env.UBUNTU_VERSION_NODOT }}.log
+          retention-days: 30
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4 pinned
+
+      - name: Read VERSION
+        run: |
+          source VERSION
+          echo "KODI_VERSION=$KODI_VERSION" >> $GITHUB_ENV
+
+      - name: Download .deb artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4 pinned
+        with:
+          pattern: kodi-${{ env.KODI_VERSION }}-ubuntu*-debs
+          path: debs/
+          merge-multiple: true
+
+      - name: Download build logs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4 pinned
+        with:
+          pattern: build-logs-ubuntu*
+          path: logs/
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          sha256sum debs/*.deb | tee debs/SHA256SUMS
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2 pinned
+        with:
+          files: |
+            debs/*.deb
+            debs/SHA256SUMS
+            logs/*.log
+          generate_release_notes: true

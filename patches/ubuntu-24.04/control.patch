@@ -1,0 +1,11 @@
+--- a/debian/control
++++ b/debian/control
+@@ -87,7 +87,7 @@
+                libsqlite3-dev,
+                libswresample-dev (>= 7:4.2.2),
+                libswscale-dev (>= 7:4.2.2),
+-               libtag-dev (>= 1.8),
++               libtag1-dev (>= 1.8),
+                libtinyxml-dev,
+                libtinyxml2-dev,
+                libtool,
