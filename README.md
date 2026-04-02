@@ -1,4 +1,4 @@
-# kodi-ubuntu
+# kodi-ubuntu-debs
 
 Unofficial Kodi 21.3 (Omega) `.deb` packages for Ubuntu LTS, backported from Debian unstable packaging.
 
@@ -39,8 +39,8 @@ sudo apt -f install
 Requires a supported Ubuntu LTS release. Run on a clean machine or VM — the build installs a large number of development packages.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kodi-ubuntu.git
-cd kodi-ubuntu
+git clone https://github.com/YOUR_USERNAME/kodi-ubuntu-debs.git
+cd kodi-ubuntu-debs
 bash scripts/build.sh
 ```
 

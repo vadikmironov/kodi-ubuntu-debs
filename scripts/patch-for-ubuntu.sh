@@ -55,7 +55,7 @@ fi
 case "$UBUNTU_VERSION" in
     24.04)
         echo "Unapplying Debian ffmpeg7 patch (Ubuntu ${UBUNTU_VERSION} ships ffmpeg 6.1)..."
-        if ! QUILT_PATCHES=debian/patches quilt pop -d "$SOURCE_DIR"; then
+        if ! (cd "$SOURCE_DIR" && QUILT_PATCHES=debian/patches quilt pop); then
             echo "Error: failed to unapply ffmpeg7 patch." >&2
             exit 1
         fi
