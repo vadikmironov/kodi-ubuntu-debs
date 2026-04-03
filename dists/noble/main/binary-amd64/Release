@@ -1,0 +1,6 @@
+Archive: noble
+Component: main
+Origin: kodi-ubuntu-debs
+Label: Kodi Ubuntu Debs
+Architecture: amd64
+Description: Unofficial Kodi packages for Ubuntu 24.04 LTS

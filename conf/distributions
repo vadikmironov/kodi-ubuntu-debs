@@ -1,0 +1,8 @@
+Origin: kodi-ubuntu-debs
+Label: Kodi Ubuntu Debs
+Suite: noble
+Codename: noble
+Architectures: amd64
+Components: main
+Description: Unofficial Kodi packages for Ubuntu 24.04 LTS
+SignWith: F5255991A34742BE
