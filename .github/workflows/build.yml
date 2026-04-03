@@ -103,7 +103,11 @@ jobs:
           ls -lh output/
 
       - name: Attest build provenance
+        # Attestations require a public repo — this step is non-fatal so
+        # builds succeed while the repo is private, and attestations start
+        # working automatically once the repo goes public.
         if: success()
+        continue-on-error: true
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2 pinned
         with:
           subject-path: output/*.deb
