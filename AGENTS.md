@@ -54,6 +54,25 @@ All scripts and the workflow source this file — it's the single place to bump 
 
 Release tags are per-Ubuntu: `v21.3-1ubuntu2404.1`, `v21.3-1ubuntu2604.1`, etc.
 
+## APT repository (GitHub Pages)
+
+Packages are published to a GitHub Pages-hosted apt repository at
+`https://vadikmironov.github.io/kodi-ubuntu-debs/`. The `update-apt-repo`
+workflow job runs on tag pushes (in parallel with `release`), using `reprepro`
+to build signed repository metadata and pushing the result to the `gh-pages` branch.
+
+**Infrastructure:**
+- **GPG signing key:** Ed25519, stored as `APT_GPG_PRIVATE_KEY` secret (base64-encoded)
+- **Tool:** `reprepro` — manages `dists/`, `pool/`, and signed `InRelease` files
+- **Branch:** `gh-pages` (orphan branch, separate from `main`)
+- **Concurrency:** serialized via `concurrency.group: apt-repo-update` to prevent race conditions
+
+**When adding a new Ubuntu release to the apt repo:**
+1. Add a new distribution stanza to the `Configure reprepro` step in `build.yml`
+2. Add the codename mapping to the `Determine target codename from tag` step
+
+**GPG key rotation:** generate a new key, update the `APT_GPG_PRIVATE_KEY` secret, and push a new tag. The public key files on `gh-pages` are regenerated automatically each run.
+
 ## Key external URLs
 
 - Debian source (.dsc): https://deb.debian.org/debian/pool/main/k/kodi/
@@ -101,4 +120,6 @@ For each supported Ubuntu release:
 - [ ] Tag push triggers Release with `.deb`, `SHA256SUMS`, and per-distro build logs attached
 - [ ] `sudo dpkg -i kodi-data_*.deb kodi-bin_*.deb kodi_*.deb && sudo apt -f install` succeeds on clean Ubuntu `<ver>`
 - [ ] `kodi --version` shows the expected version (the Git hash and branch name vary per build, but version and codename should match, e.g. `21.3.0 ... Omega`)
+- [ ] APT repository at `https://vadikmironov.github.io/kodi-ubuntu-debs/dists/<codename>/InRelease` is accessible and signed
+- [ ] `sudo apt update && sudo apt install kodi` works using the apt repo on a clean Ubuntu `<ver>`
 - [ ] GPG verification step in `fetch-source.sh` passes and is visible in the build log

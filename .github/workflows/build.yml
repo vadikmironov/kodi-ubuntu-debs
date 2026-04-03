@@ -172,3 +172,101 @@ jobs:
             debs/SHA256SUMS
             logs/*.log
           generate_release_notes: true
+
+  update-apt-repo:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: apt-repo-update
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source (for VERSION file)
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6 pinned
+        with:
+          sparse-checkout: VERSION
+          sparse-checkout-cone-mode: false
+
+      - name: Read VERSION
+        run: |
+          source VERSION
+          echo "KODI_VERSION=$KODI_VERSION" >> $GITHUB_ENV
+
+      - name: Download .deb artifacts
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 pinned
+        with:
+          pattern: kodi-${{ env.KODI_VERSION }}-ubuntu*-debs
+          path: debs/
+          merge-multiple: true
+
+      - name: Install reprepro
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq reprepro
+
+      - name: Import GPG key
+        run: echo "${{ secrets.APT_GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+
+      - name: Get GPG key ID
+        run: |
+          KEY_ID=$(gpg --list-keys --keyid-format long --with-colons | awk -F: '/^pub:/{print $5}' | head -1)
+          echo "GPG_KEY_ID=$KEY_ID" >> $GITHUB_ENV
+
+      - name: Determine target codename from tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [[ "$TAG" =~ ubuntu([0-9]{2})([0-9]{2})\. ]]; then
+            UBUNTU_VER="${BASH_REMATCH[1]}.${BASH_REMATCH[2]}"
+          else
+            echo "Error: cannot parse Ubuntu version from tag: $TAG" >&2
+            exit 1
+          fi
+          case "$UBUNTU_VER" in
+            24.04) echo "CODENAME=noble" >> $GITHUB_ENV ;;
+            *)
+              echo "Error: no codename mapping for Ubuntu $UBUNTU_VER in apt repo job" >&2
+              exit 1
+              ;;
+          esac
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6 pinned
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Configure reprepro
+        run: |
+          mkdir -p gh-pages/conf
+          cat > gh-pages/conf/distributions <<EOF
+          Origin: kodi-ubuntu-debs
+          Label: Kodi Ubuntu Debs
+          Suite: noble
+          Codename: noble
+          Architectures: amd64
+          Components: main
+          Description: Unofficial Kodi packages for Ubuntu 24.04 LTS
+          SignWith: ${{ env.GPG_KEY_ID }}
+          EOF
+
+      - name: Add packages to apt repo
+        run: |
+          cd gh-pages
+          for deb in ../debs/*.deb; do
+            reprepro --basedir . includedeb "${{ env.CODENAME }}" "$deb"
+          done
+
+      - name: Export public GPG key
+        run: |
+          gpg --armor --export "${{ env.GPG_KEY_ID }}" > gh-pages/kodi-ubuntu-debs.gpg.key
+          gpg --export "${{ env.GPG_KEY_ID }}" > gh-pages/kodi-ubuntu-debs.gpg
+
+      - name: Push to gh-pages
+        run: |
+          cd gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Update apt repo for ${GITHUB_REF#refs/tags/}"
+          git push origin gh-pages

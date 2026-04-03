@@ -17,22 +17,39 @@ The official Kodi PPA has been abandoned and no longer publishes packages for cu
 
 Only x86_64 (amd64) is supported. Building for other architectures (ARM64, i386) would require additional build matrix entries and architecture-specific patches.
 
-## Install
+## Install via apt (recommended)
 
-Download the three core `.deb` files from the [latest Release](../../releases/latest) for your Ubuntu version:
+```bash
+# Add the repository signing key
+curl -fsSL https://vadikmironov.github.io/kodi-ubuntu-debs/kodi-ubuntu-debs.gpg \
+  | sudo tee /usr/share/keyrings/kodi-ubuntu-debs.gpg > /dev/null
 
-- `kodi-data_*.deb`
-- `kodi-bin_*.deb`
-- `kodi_*.deb`
+# Add the repository (replace "noble" with your Ubuntu codename)
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/kodi-ubuntu-debs.gpg] \
+  https://vadikmironov.github.io/kodi-ubuntu-debs noble main" \
+  | sudo tee /etc/apt/sources.list.d/kodi-ubuntu-debs.list > /dev/null
 
-Then install:
+# Install Kodi
+sudo apt update
+sudo apt install kodi
+```
+
+To remove the repository:
+
+```bash
+sudo rm /etc/apt/sources.list.d/kodi-ubuntu-debs.list
+sudo rm /usr/share/keyrings/kodi-ubuntu-debs.gpg
+sudo apt update
+```
+
+### Manual install from GitHub Releases
+
+Alternatively, download the `.deb` files from the [latest Release](../../releases/latest):
 
 ```bash
 sudo dpkg -i kodi-data_*.deb kodi-bin_*.deb kodi_*.deb
 sudo apt -f install
 ```
-
-`apt -f install` resolves and pulls in any missing runtime dependencies automatically.
 
 ## Build locally
 
