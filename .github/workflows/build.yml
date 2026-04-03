@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4 pinned
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6 pinned
 
       - name: Read VERSION
         run: |
@@ -108,12 +108,12 @@ jobs:
         # working automatically once the repo goes public.
         if: success()
         continue-on-error: true
-        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2 pinned
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3 pinned
         with:
           subject-path: output/*.deb
 
       - name: Upload .deb artifacts
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6 pinned
         with:
           name: kodi-${{ env.KODI_VERSION }}-ubuntu${{ env.UBUNTU_VERSION_NODOT }}-debs
           path: output/*.deb
@@ -125,7 +125,7 @@ jobs:
 
       - name: Upload build logs
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4 pinned
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6 pinned
         with:
           name: build-logs-ubuntu${{ env.UBUNTU_VERSION_NODOT }}
           path: build-ubuntu${{ env.UBUNTU_VERSION_NODOT }}.log
@@ -139,7 +139,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4 pinned
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6 pinned
 
       - name: Read VERSION
         run: |
@@ -147,14 +147,14 @@ jobs:
           echo "KODI_VERSION=$KODI_VERSION" >> $GITHUB_ENV
 
       - name: Download .deb artifacts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4 pinned
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 pinned
         with:
           pattern: kodi-${{ env.KODI_VERSION }}-ubuntu*-debs
           path: debs/
           merge-multiple: true
 
       - name: Download build logs
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4 pinned
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6 pinned
         with:
           pattern: build-logs-ubuntu*
           path: logs/
