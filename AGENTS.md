@@ -4,7 +4,7 @@ Build tooling repo that produces native Kodi `.deb` packages for Ubuntu LTS rele
 
 ## What this repo does
 
-1. `scripts/fetch-source.sh` — downloads the Debian source package (`.dsc` + tarballs) from `deb.debian.org` using `dget`, verifies GPG signature against the Debian keyring (via `dscverify`), and extracts it into `build/`
+1. `scripts/fetch-source.sh` — downloads the Debian source package (`.dsc` + tarballs) from `deb.debian.org` using `dget`, verifies GPG signature against the Debian keyring (via `dscverify`), and extracts it into `build/`. If the pinned revision has been dropped from the live pool (Debian removes superseded source), it falls back to `snapshot.debian.org`, which archives every upload permanently.
 2. `scripts/patch-for-ubuntu.sh` — detects (or accepts via `UBUNTU_VERSION` env var) the target Ubuntu release, conditionally unapplies incompatible Debian quilt patches (e.g. ffmpeg7 on 24.04), then applies patches from `patches/ubuntu-<version>/` to the extracted `debian/` directory
 3. `scripts/build.sh` — end-to-end orchestrator: detects Ubuntu version, exports it, calls the two scripts above, installs build-deps via `mk-build-deps`, runs `dpkg-buildpackage`, copies output to `output/`
 
@@ -84,6 +84,7 @@ to build signed repository metadata and pushing the result to the `gh-pages` bra
 ## Key external URLs
 
 - Debian source (.dsc): https://deb.debian.org/debian/pool/main/k/kodi/
+- Debian snapshot archive (fetch fallback): https://snapshot.debian.org/package/kodi/
 - Debian packaging git: https://salsa.debian.org/multimedia-team/kodi-media-center/kodi.git
 - Debian package tracker: https://tracker.debian.org/pkg/kodi
 - Kodi upstream (Omega branch): https://github.com/xbmc/xbmc/tree/Omega
@@ -108,6 +109,7 @@ to build signed repository metadata and pushing the result to the `gh-pages` bra
 - Verify libtag package name — may differ again
 
 ### General (all releases)
+- **Debian pool churn → fetch 404** — Debian drops superseded source from the live pool (e.g. `21.3+dfsg-1` was replaced by the NMU `-1.1`), so `dget` against `deb.debian.org` 404s for a pinned older revision. `fetch-source.sh` falls back to `snapshot.debian.org` for the exact pinned `.dsc`. If the hardcoded `SNAPSHOT_TIMESTAMP` ever stops serving the revision, set the `SNAPSHOT_TIMESTAMP` env var to another point when it was in the archive (any works — the `.dsc` pins component hashes, so bytes are identical).
 - **`dpkg-genbuildinfo` slowness** — GH runners have a huge `/usr/local`; workflow renames it before build
 - **Disk space** — workflow removes Android SDK, .NET, ghcup, PowerShell to free ~15 GB before building
 - **OOM during build** — if runner runs out of RAM, fall back to `-j2`
