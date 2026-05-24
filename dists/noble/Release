@@ -2,19 +2,19 @@ Origin: kodi-ubuntu-debs
 Label: Kodi Ubuntu Debs
 Suite: noble
 Codename: noble
-Date: Fri, 03 Apr 2026 19:43:32 UTC
+Date: Sun, 24 May 2026 15:00:06 UTC
 Architectures: amd64
 Components: main
 Description: Unofficial Kodi packages for Ubuntu 24.04 LTS
 MD5Sum:
- 7350447c1f6fc7e7095d306b04aa1c22 30128 main/binary-amd64/Packages
- 325d10b472fcf640530eee476b9ebc43 4913 main/binary-amd64/Packages.gz
+ 7960d0cc2faa4fed2f20ce15d6c66999 30128 main/binary-amd64/Packages
+ 470437bed4562e8e5a1caaade23a1f1f 4913 main/binary-amd64/Packages.gz
  601c1633bb27ddf6972e54c9944e5f8c 159 main/binary-amd64/Release
 SHA1:
- c211c1cf7f023fc2eeaa41cfe3f5cd58fb8fb972 30128 main/binary-amd64/Packages
- 5139d3dcaec15fbbe835c8d198ac43222b61c4fc 4913 main/binary-amd64/Packages.gz
+ 726f0761fda7bfb6177ffb92d1e72da939ab7066 30128 main/binary-amd64/Packages
+ 9b82178b44f7c64fb56f8c7f452601514b50f4fd 4913 main/binary-amd64/Packages.gz
  f60cd3405b03ac8ded99b03e761ec9ed6fab6d19 159 main/binary-amd64/Release
 SHA256:
- f5935e9322cded98e1a219426fbcf84f55bc3534fa304d4f2355303fa689b730 30128 main/binary-amd64/Packages
- fe156cc496328d792390b736fd937047057f94792db576c818b59f4fd058c6cf 4913 main/binary-amd64/Packages.gz
+ db98bdace0ea3a8f358883ac054b3a347b62c86ea7dbcd56fb1814d8fdb63efb 30128 main/binary-amd64/Packages
+ 01497a0d82a3ba7467d5361e045e9924fb4bf3685fc7ba2fa9f6d002cb09a0c1 4913 main/binary-amd64/Packages.gz
  3775c95c628192aab13d2cd3395b4ef2ed1c705d243a0a537cbf8a1c31f62cb5 159 main/binary-amd64/Release
