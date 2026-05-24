@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(apt-cache search:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(gh search *)"
     ]
   }
 }

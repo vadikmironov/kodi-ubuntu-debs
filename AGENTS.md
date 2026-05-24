@@ -10,7 +10,10 @@ Build tooling repo that produces native Kodi `.deb` packages for Ubuntu LTS rele
 
 ## Patch system
 
-Patches live in `patches/ubuntu-<version>/` — one directory per supported Ubuntu LTS release. Each patch modifies only `debian/` metadata — never Kodi application source.
+There are two kinds of patches, distinguished by what they change and what they're scoped to:
+
+- **`patches/ubuntu-<version>/`** — one directory per supported Ubuntu LTS release. Each patch modifies only `debian/` metadata (e.g. `control`, `series`) — never Kodi application source. These exist because Ubuntu differs from Debian (package names, available library versions).
+- **`patches/backports/`** — upstream Kodi *source* patches backported from a *newer* Kodi release to fix bugs in the version we currently build. They are **not** Ubuntu-specific (the same patch applies to every Ubuntu target) but they **are** tied to the current `KODI_VERSION`. `patch-for-ubuntu.sh` (step 2.5) copies them into `debian/patches/backports/` and appends them to the quilt series, so `dpkg-buildpackage` applies them after Debian's own patches. Each carries a DEP-3 header whose `Applied-Upstream:` field records the Kodi version that already contains the fix — **review and usually drop these when `KODI_VERSION` is bumped** (see "Refreshing patches for a new Kodi version").
 
 Current patches for Ubuntu 24.04:
 - `control.patch` — renames `libtag-dev` → `libtag1-dev` (Ubuntu package name differs from Debian)
@@ -49,10 +52,15 @@ All Kodi/Debian version info is in the `VERSION` file at the repo root:
 ```
 KODI_VERSION=21.3
 DEBIAN_REVISION=1
+UBUNTU_BUILD=2
 ```
 All scripts and the workflow source this file — it's the single place to bump when a new Kodi point release comes out.
 
-Release tags are per-Ubuntu: `v21.3-1ubuntu2404.1`, `v21.3-1ubuntu2604.1`, etc.
+`UBUNTU_BUILD` is a rebuild counter for re-releasing the *same* Kodi/Debian version — e.g. after adding or changing a `patches/backports/` patch. `patch-for-ubuntu.sh` sets the package version to `<debian-version>~ubuntu<NODOT><UBUNTU_BUILD>` (e.g. `2:21.3+dfsg-1~ubuntu24044` for 24.04 build 4), so a bump makes apt treat the package as an upgrade. Bump it for every re-release; **reset it to 1 whenever `KODI_VERSION` changes**.
+
+The trailing digit *is* the build number. The earlier 24.04 releases (tags `.1`–`.3`) predate this field and all shipped as `~ubuntu24041`; build 4 (`~ubuntu24044`, tag `.4`) is the first to carry the PipeWire backport, and from here the tag's trailing number tracks `UBUNTU_BUILD`. Note the suffix is concatenated with no separator — a dotted form like `~ubuntu2404.2` would sort *below* `~ubuntu24041` (because `2404` < `24041` numerically), i.e. a downgrade. Verify ordering with `dpkg --compare-versions` if you change the scheme.
+
+Release tags are per-Ubuntu and end with the build number: `v21.3-1ubuntu2404.1`, `v21.3-1ubuntu2404.2`, `v21.3-1ubuntu2604.1`, etc. The trailing number should match `UBUNTU_BUILD`.
 
 ## APT repository (GitHub Pages)
 
@@ -92,6 +100,7 @@ to build signed repository metadata and pushing the result to the `gh-pages` bra
 - **`0004-ffmpeg7.patch`** — Debian patch adds ffmpeg 7.x API compat; unapplied via `quilt pop` in `patch-for-ubuntu.sh` step 1 when targeting 24.04
 - **libtag naming** — Ubuntu calls it `libtag1-dev`; Debian calls it `libtag-dev` (handled by `control.patch`)
 - **fmt/spdlog** — if versions are too old, add `-DENABLE_INTERNAL_FMT=ON -DENABLE_INTERNAL_SPDLOG=ON` to cmake args in `debian/rules`
+- **PipeWire device-enumeration deadlock** — Kodi 21.3 freezes when opening Settings → System → Audio (or on audio device change) with PipeWire active (upstream issue #27420; related crash #26212). Fixed by `patches/backports/0018-Fix-PipeWire-deadlock-in-audio-device-enumeration.patch` (backport of upstream PR #27615). Not Ubuntu-specific — it's a Kodi-21 source bug — but listed here as the symptom most users hit. **Drop this patch at Kodi 22 (Piers)**, which already contains the fix.
 
 ### Ubuntu 26.04 (codename TBD — not yet released as of this writing)
 - ffmpeg version unknown at time of writing — check `apt-cache policy libavcodec-dev` on a 26.04 system
@@ -105,11 +114,12 @@ to build signed repository metadata and pushing the result to the `gh-pages` bra
 
 ## Refreshing patches for a new Kodi version
 
-1. Bump `VERSION`
+1. Bump `KODI_VERSION` in `VERSION` and reset `UBUNTU_BUILD=1`
 2. Run `scripts/fetch-source.sh` locally — extracts new source into `build/`
 3. Try applying existing patches: `UBUNTU_VERSION=24.04 bash scripts/patch-for-ubuntu.sh`
 4. If patches fail, inspect what changed in `debian/control` and `debian/patches/series` in the new version and update accordingly
 5. Regenerate patches with `diff -u` against the original extracted `debian/` files
+6. **Re-evaluate every `patches/backports/` patch:** check its DEP-3 `Applied-Upstream:` version against the new `KODI_VERSION`. If the new Kodi already contains the fix, delete the patch; otherwise refresh it (`quilt push`; resolve conflicts; `quilt refresh`) since the surrounding source may have moved.
 
 ## Validation checklist
 

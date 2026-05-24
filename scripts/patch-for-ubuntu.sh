@@ -7,6 +7,9 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 # shellcheck source=../VERSION
 source "$REPO_ROOT/VERSION"
 
+# Rebuild counter (see VERSION). Default to 1 for older VERSION files.
+UBUNTU_BUILD="${UBUNTU_BUILD:-1}"
+
 # Detect Ubuntu version: env var takes precedence, then auto-detect from runner
 UBUNTU_VERSION="${UBUNTU_VERSION:-$(lsb_release -rs 2>/dev/null || echo "")}"
 if [ -z "$UBUNTU_VERSION" ]; then
@@ -78,13 +81,51 @@ for patch in "$PATCH_DIR/"*.patch; do
     fi
 done
 
+# --- Step 2.5: Add upstream source backports.
+# These patch Kodi *source* (not debian/ metadata) to backport fixes that are
+# already in a newer Kodi release. They are tied to the current KODI_VERSION,
+# not to any Ubuntu release — the same patch applies to every Ubuntu target —
+# so they live here rather than in patches/ubuntu-<ver>/. They MUST be reviewed
+# (and usually dropped) when KODI_VERSION is bumped: each patch's DEP-3 header
+# records the upstream version that supersedes it (Applied-Upstream:). Each is a
+# quilt patch: we drop it into debian/patches/backports/ and append it to the
+# series so dpkg-buildpackage applies it during the build (after Debian's).
+BACKPORTS_DIR="$REPO_ROOT/patches/backports"
+if [ -d "$BACKPORTS_DIR" ]; then
+    SERIES="$SOURCE_DIR/debian/patches/series"
+    mkdir -p "$SOURCE_DIR/debian/patches/backports"
+    for patch in "$BACKPORTS_DIR/"*.patch; do
+        [ -f "$patch" ] || continue
+        patchname=$(basename "$patch")
+        echo "Adding common patch backports/${patchname}..."
+        cp "$patch" "$SOURCE_DIR/debian/patches/backports/$patchname"
+        # Append to the series only if not already present (idempotent).
+        if ! grep -qxF "backports/$patchname" "$SERIES"; then
+            echo "backports/$patchname" >> "$SERIES"
+        fi
+    done
+fi
+
 # --- Step 3: Update changelog.
-# --force-distribution is needed because the target codename (e.g. "noble") may
-# not match the running system's distribution.
+# Set an explicit version <debian-version>~ubuntu<NODOT><UBUNTU_BUILD>, e.g.
+# 2:21.3+dfsg-1~ubuntu24042. We build the version ourselves (rather than
+# `dch --local`, whose auto-incrementing trailing counter is not deterministic
+# on a fresh extract) so re-releases bump predictably with UBUNTU_BUILD. The
+# trailing digit is the build number, continuing the published scheme where
+# the first release was ~ubuntu<NODOT>1 (e.g. ~ubuntu24041). The leading "~"
+# keeps it sorting below any hypothetical official Ubuntu kodi of the same
+# version. -b/--force-bad-version is required because ~ sorts *below* the plain
+# Debian version, so dch would otherwise reject it as "not greater".
+# --force-distribution is needed because the codename (e.g. "noble") may not
+# match the running system's distribution.
 echo "Updating changelog..."
 (
     cd "$SOURCE_DIR"
+    BASE_VERSION="$(dpkg-parsechangelog -S Version)"
+    NEW_VERSION="${BASE_VERSION}~ubuntu${UBUNTU_VERSION_NODOT}${UBUNTU_BUILD}"
+    echo "New package version: ${NEW_VERSION}"
     DEBEMAIL="builder@ubuntu.local" DEBFULLNAME="Ubuntu Builder" \
-        dch --local ~ubuntu${UBUNTU_VERSION_NODOT} --distribution "$UBUNTU_CODENAME" \
-        --force-distribution "Backport to Ubuntu ${UBUNTU_VERSION} LTS"
+        dch -b -v "$NEW_VERSION" \
+        --distribution "$UBUNTU_CODENAME" --force-distribution \
+        "Backport to Ubuntu ${UBUNTU_VERSION} LTS (rebuild ${UBUNTU_BUILD})"
 )

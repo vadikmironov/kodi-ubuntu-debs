@@ -8,6 +8,7 @@ patches/*/*.orig
 patches/*/*.rej
 patches/*/build/
 
-# Claude Code — keep project permissions, ignore everything else
+# Claude Code — track shared project settings, ignore everything else
+# (settings.local.json holds personal per-user overrides; keep it untracked)
 .claude/*
-!.claude/settings.local.json
+!.claude/settings.json

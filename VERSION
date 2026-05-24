@@ -1,2 +1,10 @@
 KODI_VERSION=21.3
 DEBIAN_REVISION=1
+# Rebuild counter for re-releases of the SAME Kodi/Debian version (e.g. after
+# adding an upstream backport in patches/backports/). Bump this to publish a
+# package that apt treats as an upgrade; it is the trailing digit of the Ubuntu
+# version suffix ~ubuntu<NODOT><UBUNTU_BUILD> (e.g. 24.04 build 4 -> ~ubuntu24044).
+# The earlier 24.04 releases (tags .1-.3) predate this field and all shipped as
+# ~ubuntu24041; this is the first build with the PipeWire backport. Reset to 1
+# when KODI_VERSION changes.
+UBUNTU_BUILD=4
