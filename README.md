@@ -10,10 +10,14 @@ The official Kodi PPA has been abandoned and no longer publishes packages for cu
 
 ## Supported Ubuntu releases
 
-| Ubuntu | Architecture | Status |
-|--------|-------------|--------|
-| 24.04 LTS (Noble) | amd64 | Supported |
-| 26.04 LTS | amd64 | Planned |
+| Ubuntu | Kodi this repo builds | Ubuntu's stock Kodi | Status |
+|--------|----------------------|---------------------|--------|
+| 24.04 LTS (Noble) | 21.3 (Omega) + upstream backports | 20.5 (Nexus) | Supported |
+| 26.04 LTS (Resolute) | 22 (Piers) — once it reaches Debian | 21.3 (Omega) | Planned |
+
+**24.04** ships only Kodi 20 in its own repos, so this repo's 21.3 packages are a real upgrade — and they carry upstream bug fixes backported on top (e.g. the PipeWire audio-settings deadlock fix).
+
+**26.04** already ships Kodi 21.3 in `universe`, so if 21.3 is all you need, just `sudo apt install kodi` — this repo adds nothing there yet. The plan for 26.04 is to ship **Kodi 22 (Piers)** as soon as it lands in Debian. As of this writing Kodi 22 is still in alpha (FFmpeg 8) and not yet in Debian, so 26.04 builds haven't started.
 
 Only x86_64 (amd64) is supported. Building for other architectures (ARM64, i386) would require additional build matrix entries and architecture-specific patches.
 

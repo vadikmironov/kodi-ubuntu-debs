@@ -103,10 +103,12 @@ to build signed repository metadata and pushing the result to the `gh-pages` bra
 - **fmt/spdlog** — if versions are too old, add `-DENABLE_INTERNAL_FMT=ON -DENABLE_INTERNAL_SPDLOG=ON` to cmake args in `debian/rules`
 - **PipeWire device-enumeration deadlock** — Kodi 21.3 freezes when opening Settings → System → Audio (or on audio device change) with PipeWire active (upstream issue #27420; related crash #26212). Fixed by `patches/backports/0018-Fix-PipeWire-deadlock-in-audio-device-enumeration.patch` (backport of upstream PR #27615). Not Ubuntu-specific — it's a Kodi-21 source bug — but listed here as the symptom most users hit. **Drop this patch at Kodi 22 (Piers)**, which already contains the fix.
 
-### Ubuntu 26.04 (codename TBD — not yet released as of this writing)
-- ffmpeg version unknown at time of writing — check `apt-cache policy libavcodec-dev` on a 26.04 system
-- If ffmpeg 7.x: the `0004-ffmpeg7.patch` quilt pop is skipped automatically; `series.patch` may not be needed
-- Verify libtag package name — may differ again
+### Ubuntu 26.04 (Resolute)
+- **Ships Kodi 21.3 in `universe`** (`2:21.3+dfsg-1ubuntu1`) — no point building 21.3 here. Plan: build **Kodi 22 (Piers)** instead, to get ahead of stock.
+- **Kodi 22 not in Debian yet** — upstream is at Alpha 3 (FFmpeg 8); Debian unstable/experimental are still 21.3. 26.04 builds wait on Debian packaging the tracker (https://tracker.debian.org/pkg/kodi).
+- **When 22 lands:** follow "Refreshing patches for a new Kodi version"; drop Kodi-21 backports (e.g. PipeWire `0018`, already in 22); add the `26.04) UBUNTU_CODENAME="resolute"` mapping + matrix entry then.
+- **ffmpeg:** 26.04 ships ffmpeg 7.x, Kodi 22 targets FFmpeg 8 — the 21-specific `0004-ffmpeg7.patch` pop won't apply; check what the 22 packaging needs.
+- Verify libtag package name — may differ again.
 
 ### General (all releases)
 - **Debian pool churn → fetch 404** — Debian drops superseded source from the live pool (e.g. `21.3+dfsg-1` was replaced by the NMU `-1.1`), so `dget` against `deb.debian.org` 404s for a pinned older revision. `fetch-source.sh` falls back to `snapshot.debian.org` for the exact pinned `.dsc`. If the hardcoded `SNAPSHOT_TIMESTAMP` ever stops serving the revision, set the `SNAPSHOT_TIMESTAMP` env var to another point when it was in the archive (any works — the `.dsc` pins component hashes, so bytes are identical).
