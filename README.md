@@ -56,7 +56,7 @@ sudo apt -f install
 Requires a supported Ubuntu LTS release. Run on a clean machine or VM — the build installs a large number of development packages.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/kodi-ubuntu-debs.git
+git clone https://github.com/vadikmironov/kodi-ubuntu-debs.git
 cd kodi-ubuntu-debs
 bash scripts/build.sh
 ```
@@ -151,7 +151,7 @@ Kodi source is fetched at build time directly from the official Debian archive (
 Each release includes SLSA build provenance attestations, verifiable with:
 
 ```bash
-gh attestation verify kodi_*.deb --owner YOUR_USERNAME
+gh attestation verify kodi_*.deb --owner vadikmironov
 ```
 
 ## External resources
