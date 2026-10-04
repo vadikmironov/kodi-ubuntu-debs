@@ -1,0 +1,20 @@
+Origin: kodi-ubuntu-debs
+Label: Kodi Ubuntu Debs
+Suite: resolute
+Codename: resolute
+Date: Sun, 04 Oct 2026 19:20:37 UTC
+Architectures: amd64
+Components: main
+Description: Unofficial Kodi packages for Ubuntu 26.04 LTS
+MD5Sum:
+ 5d84e109021722d82d05b77a07fe01b6 30193 main/binary-amd64/Packages
+ 1bc1ee933cf3eb9378b1754fbe1b46ac 4913 main/binary-amd64/Packages.gz
+ 0de1bd0f346953eebe91b78477b2b3b7 162 main/binary-amd64/Release
+SHA1:
+ 26b3d86f66a17f864827aed2adffcb0a8c086e1d 30193 main/binary-amd64/Packages
+ 9a5d9782dc18482fdd24f8eafb9227b4b51c4cf2 4913 main/binary-amd64/Packages.gz
+ 6f844fb3fedaf0885ba6be6362e3fb0bba4a94fa 162 main/binary-amd64/Release
+SHA256:
+ 60c099be9594f3fca1d48c1034fe543d5f8f60e17b430bb9a5e2ecb0578f598c 30193 main/binary-amd64/Packages
+ 61df6232fbc2781034dd5026525ff217e94b78b2ed2ec111886dd2bdd291b998 4913 main/binary-amd64/Packages.gz
+ dcf420d562bf20c8904e45dc112e8734bda229ee3d81a0f7e6737e1fc277a824 162 main/binary-amd64/Release

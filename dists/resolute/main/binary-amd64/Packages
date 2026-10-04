@@ -1,0 +1,554 @@
+Package: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 98
+Depends: kodi-bin (>= 2:21.3+dfsg-1.1~ubuntu26041), kodi-bin (<< 2:21.3+dfsg-1.1~ubuntu26041.1~), kodi-data (>= 2:21.3+dfsg-1.1~ubuntu26041)
+Recommends: kodi-repository-kodi | kodi-repository, kodi-visualization-spectrum
+Breaks: xbmc (<< 2:13.2+dfsg1-5~)
+Replaces: xbmc (<< 2:13.2+dfsg1-5~)
+Provides: kodi-api-audiodecoder (= 4.0.0), kodi-api-audioencoder (= 3.0.0), kodi-api-audioengine (= 1.1.1), kodi-api-filesystem (= 1.1.9), kodi-api-game (= 3.0.2), kodi-api-general (= 1.0.5), kodi-api-gui (= 5.15.0), kodi-api-imagedecoder (= 3.0.1), kodi-api-inputstream (= 3.3.0), kodi-api-main (= 2.0.2), kodi-api-network (= 1.0.4), kodi-api-peripheral (= 3.0.2), kodi-api-pvr (= 8.3.0), kodi-api-screensaver (= 2.2.0), kodi-api-vfs (= 3.0.1), kodi-api-videocodec (= 2.1.0), kodi-api-visualization (= 4.0.0)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 22808
+SHA256: e9c6d15e7aa8dbd3ce7d97f44619fa14dbb54e348c9f787c84d07098dd744043
+SHA1: 15fae22d8c8390d50d69f4af320ac880e0368314
+MD5sum: b13259f8bf7f15d86cd9bf003f8a9d3a
+Description: Open Source Home Theatre (executable binaries)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package contains the kodi binaries.
+
+Package: kodi-addons-dev
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 77
+Depends: kodi-addons-dev-common (= 2:21.3+dfsg-1.1~ubuntu26041)
+Breaks: kodi-addons-dev-common (<< 2:20.0~rc1+dfsg1-1~)
+Replaces: kodi-addons-dev-common (<< 2:20.0~rc1+dfsg1-1~)
+Provides: dh-sequence-kodiaddon (= 2:21.3+dfsg-1.1~ubuntu26041)
+Multi-Arch: same
+Homepage: https://kodi.tv/
+Priority: optional
+Section: libdevel
+Filename: pool/main/k/kodi/kodi-addons-dev_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 19740
+SHA256: 05b51d07a2a222001ee9aa9616fd5a6e7ba8b54be3b29b72549ed73ff1a0de0c
+SHA1: 96d37fd2a7acbfd27e6fb95484898b69f077e4c4
+MD5sum: fabe423805879a02028cecb0b1257445
+Description: Open Source Home Theatre (addon development package)
+ This package is a dummy package used in conjunction with kodi-addons-dev
+ to detect if a binary addon should be built for given Debian architecture.
+ .
+ The alternative to introducing this package is marking kodi-addons-dev back
+ as arch:any, but this makes Lintian and multi-arch hinter noisy.
+ .
+ If Kodi upstream starts shipping architecture-specific development libraries
+ again, they will land in this package.
+
+Package: kodi-addons-dev-common
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: all
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 2041
+Breaks: kodi-addons-dev (<< 2:19.4+dfsg1-1~)
+Replaces: kodi-addons-dev (<< 2:19.4+dfsg1-1~)
+Multi-Arch: foreign
+Homepage: https://kodi.tv/
+Priority: optional
+Section: libdevel
+Filename: pool/main/k/kodi/kodi-addons-dev-common_21.3+dfsg-1.1~ubuntu26041_all.deb
+Size: 257004
+SHA256: 3cf541686fc39165b9fe3f1d89097fd89a7d187c4fe2cf69a560b1f940d880f0
+SHA1: f961ce703f4d905e65e3e31573e2ad4fc14ae446
+MD5sum: 365c0cc6e67c6c2082877b2acf4fe1a3
+Description: Open Source Home Theatre (architecture-independent addon development package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This is the development package for Kodi Addons.
+ .
+ This package contains independent headers for building addons without the need
+ to keep a whole Kodi source tree.
+
+Package: kodi-bin
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 28587
+Depends: python3-pil, python3-pycryptodome, libasound2t64 (>= 1.0.27), libass9 (>= 1:0.15.0), libavahi-client3 (>= 0.6.16), libavahi-common3 (>= 0.6.16), libavcodec62 (>= 7:8.0.1), libavfilter11 (>= 7:8.0.1), libavformat62 (>= 7:8.0.1), libavutil60 (>= 7:8.0.1), libbluetooth3 (>= 4.91), libbluray3 (>= 1:0.9.3), libc6 (>= 2.43), libcap2 (>= 1:2.10), libcdio19t64 (>= 2.1.0), libcec7 (>= 7.0.0), libcrossguid0 (>= 0.0+git200150803), libcurl3t64-gnutls (>= 7.18.0), libdate-tz3 (>= 3.0.1), libdbus-1-3 (>= 1.10), libdisplay-info3 (>= 0.3.0), libdrm2 (>= 2.4.107), libegl1, libfmt10 (>= 10.1.1+ds1), libfreetype6 (>= 2.2.1), libfribidi0 (>= 0.19.2), libfstrcmp0 (>= 0.7.D001), libgbm1 (>= 17.1.0~rc2), libgcc-s1 (>= 3.3.1), libgcrypt20 (>= 1.12.0), libgl1, libharfbuzz0b (>= 0.9.9), libinput10 (>= 0.21.0), libiso9660-12 (>= 2.2.0), libkissfft-float131 (>= 131.1.0~), liblcms2-2 (>= 2.2+git20110628), liblirc-client0t64 (>= 0.10.2), liblzo2-2 (>= 2.02), libmicrohttpd12t64 (>= 0.9.50), libmysqlclient24 (>= 8.4.2), libnfs14 (>= 5.0.2), libpcre2-8-0 (>= 10.22), libpipewire-0.3-0t64 (>= 0.3.50), libplist-2.0-4 (>= 2.3.0), libpulse0 (>= 0.99.4), libpython3.14 (>= 3.14.1), libshairplay0 (>= 0.9.0~), libsmbclient0 (>= 2:4.8.0+dfsg), libsndio7.0 (>= 1.8.1), libspdlog1.15-fmt10, libsqlite3-0 (>= 3.7.11), libstdc++6 (>= 14), libswresample6 (>= 7:8.0.1), libswscale9 (>= 7:8.0.1), libtag2 (>= 2.0), libtinyxml2-11 (>= 11.0.0), libtinyxml2.6.2v5 (>= 2.6.2), libudev1 (>= 183), libudfread3 (>= 1.2.0), libva-drm2 (>= 1.1.0), libva-wayland2 (>= 1.3.0), libva-x11-2 (>= 1.0.3), libva2 (>= 2.2.0), libwayland-client++1 (>= 1.0.0), libwayland-cursor++1 (>= 1.0.0), libwayland-egl++1 (>= 1.0.0), libx11-6, libxext6, libxkbcommon0 (>= 0.5.0), libxml2-16 (>= 2.14.1), libxrandr2 (>= 2:1.2.99.3), libxslt1.1 (>= 1.1.25), zlib1g (>= 1:1.1.4)
+Recommends: udisks2
+Conflicts: libgl1-mesa-swx11
+Breaks: xbmc-bin (<< 2:13.2+dfsg1-5~)
+Replaces: xbmc-bin (<< 2:13.2+dfsg1-5~)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-bin_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 9323782
+SHA256: 4b8a9857aba55823fd88c423b3ec5c4390a70059b97fa01e52e4f399a1128d68
+SHA1: 2f51d317863fd138e8472483d26dc112438b9fc6
+MD5sum: c29d9bb563621c53e350ea0c9b504f5a
+Description: Open Source Home Theatre (architecture-dependent files)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package contains the binaries needed to have a working Kodi.
+
+Package: kodi-data
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: all
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 37871
+Depends: mesa-utils, x11-utils, libjs-jquery, libjs-iscroll
+Recommends: fonts-noto-core, fonts-noto-mono, fonts-roboto-unhinted
+Suggests: fonts-noto-ui-core
+Breaks: xbmc (<< 2:13.2+dfsg1-5~)
+Replaces: xbmc (<< 2:13.2+dfsg1-5~)
+Multi-Arch: foreign
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-data_21.3+dfsg-1.1~ubuntu26041_all.deb
+Size: 24297730
+SHA256: 4523816dade74d419828202be7c9d996598632da567f5b8e001d6ecd9d2fd4b9
+SHA1: 98584cc3f1e919dea1790aac0d2c3740a0803a84
+MD5sum: b246e0bf34d74f71d9cf08f5960ff16e
+Description: Open Source Home Theatre (arch-independent data package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package contains all the architecture independent data needed to have a
+ working Kodi.
+
+Package: kodi-eventclients-common
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: all
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 72
+Multi-Arch: foreign
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-eventclients-common_21.3+dfsg-1.1~ubuntu26041_all.deb
+Size: 23970
+SHA256: 7459ebf3c3d65b06151ef809b6e8a7c6d79c92365ff99178af2b0c0f1e679cd3
+SHA1: d1ffc28fb7ca88f6136a4b9f63b5e62c20e50d43
+MD5sum: 2afffeb853a32cb62ea729f599195cff
+Description: Open Source Home Theatre (Event Client Common package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package is the common package for Kodi Event Client.
+
+Package: kodi-eventclients-dev
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 63
+Depends: kodi-eventclients-dev-common (= 2:21.3+dfsg-1.1~ubuntu26041), kodi-eventclients-python (= 2:21.3+dfsg-1.1~ubuntu26041)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: libdevel
+Filename: pool/main/k/kodi/kodi-eventclients-dev_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 16182
+SHA256: f64be206d665900ea1cfdfd768f0ed7a1b595e46666f39cb8ab7dc39a4e20d23
+SHA1: ae842c90d8c3c8bf821ba40209a9137acb5fe3c3
+MD5sum: 6a1f35849d6941066f637e407992d0c5
+Description: Open Source Home Theatre (Event Client virtual dev package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This is the virtual development package for Kodi Event Client.
+
+Package: kodi-eventclients-dev-common
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: all
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 118
+Breaks: kodi-eventclients-dev (<< 2:19.4+dfsg1-1~)
+Replaces: kodi-eventclients-dev (<< 2:19.4+dfsg1-1~)
+Multi-Arch: foreign
+Homepage: https://kodi.tv/
+Priority: optional
+Section: libdevel
+Filename: pool/main/k/kodi/kodi-eventclients-dev-common_21.3+dfsg-1.1~ubuntu26041_all.deb
+Size: 25128
+SHA256: 07667314256911af7598a6716c779fbccc5b2d4cf62ccea62be992bceeeb66a1
+SHA1: cac319b2ab4eccdb885c7d733b0561565242b310
+MD5sum: c039b655302702609d6648812011c035
+Description: Open Source Home Theatre (Event Client common dev package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This is the common development package for Kodi Event Client.
+
+Package: kodi-eventclients-kodi-send
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 73
+Depends: kodi-eventclients-python (= 2:21.3+dfsg-1.1~ubuntu26041), python3:any
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-eventclients-kodi-send_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 18410
+SHA256: 04fd735a49aac23db0f9b3f449f04875e3a93bd7b1c4fd67a30451d32bb9a897
+SHA1: d35e8c5663b2b4c9979b888d6f7d6b22c7384e83
+MD5sum: e64f2a65ca8a9cd59a10df8adc315292
+Description: Open Source Home Theatre (Event Client Kodi-SEND package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package is the Kodi-SEND package for Kodi Event Client.
+
+Package: kodi-eventclients-ps3
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 100
+Depends: kodi-eventclients-python (= 2:21.3+dfsg-1.1~ubuntu26041), python3-pyudev, python3-usb, python3:any
+Breaks: kodi-eventclients-common (<< 2:19.0~alpha3+dfsg1-1~)
+Replaces: kodi-eventclients-common (<< 2:19.0~alpha3+dfsg1-1~)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-eventclients-ps3_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 24204
+SHA256: 7663afaf120356f73e1305a7f93712917acf65e58357e344442e9de184ae16f4
+SHA1: bfa0f199c3e953b61589259c6112ad51429bc48f
+MD5sum: 9ca699b59d929e52978bd2a61aabd593
+Description: Open Source Home Theatre (Event Client PS3 package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package is the PS3 package for Kodi Event Client.
+
+Package: kodi-eventclients-python
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 102
+Depends: kodi-eventclients-common (= 2:21.3+dfsg-1.1~ubuntu26041), python3-bluez, python3:any
+Breaks: kodi-eventclients-common (<< 2:19.4+dfsg1-1~)
+Replaces: kodi-eventclients-common (<< 2:19.4+dfsg1-1~)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-eventclients-python_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 23034
+SHA256: b181cdbcdb5b06cef8ff57fd0e4bf6e0e7fa67c97822c14d6948edfbfc346b83
+SHA1: c31a14043c9168fd7421ce563070b24b97154248
+MD5sum: aac771cd9be998bc3c31967e23dad4a8
+Description: Open Source Home Theatre (Event Client Python package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package is the virtual Python package for Kodi Event Client.
+
+Package: kodi-eventclients-wiiremote
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 130
+Depends: kodi-eventclients-python (= 2:21.3+dfsg-1.1~ubuntu26041), libbluetooth3 (>= 4.91), libc6 (>= 2.38), libcwiid1t64 (>= 0.6.00+svn184), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 13.1)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-eventclients-wiiremote_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 36090
+SHA256: 5cbdd9eaa9256826230ab08641866208d979ab43922e0cd925f39f840a20c50a
+SHA1: 462da6e03260b1d5590f0536ee1321cebade0558
+MD5sum: 584fac1dbb70fb3596518a8dab093a80
+Description: Open Source Home Theatre (Event Client WII Remote support package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package is the Wii Remote client package for Kodi.
+
+Package: kodi-eventclients-zeroconf
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 74
+Depends: kodi-eventclients-python (= 2:21.3+dfsg-1.1~ubuntu26041), python3-avahi, python3-dbus, python3-gi, python3:any
+Breaks: kodi-eventclients-common (<< 2:19.0~alpha3+dfsg1-1~)
+Replaces: kodi-eventclients-common (<< 2:19.0~alpha3+dfsg1-1~)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-eventclients-zeroconf_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 18114
+SHA256: 0fc63c99008ac8fc52d0443adcae267b660be90144f8948e8263ecb0016bda17
+SHA1: 1aeff53d719b201df2c0eefcc12c498e32b17afd
+MD5sum: 79a6a5371ea2cb2a5dcc6cbd1c6ba57a
+Description: Open Source Home Theatre (Event Client ZeroConf script package)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package is the ZeroConf script for Kodi Event Client.
+
+Package: kodi-repository-kodi
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: all
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 370
+Enhances: kodi
+Conflicts: kodi-repository
+Breaks: kodi-data (<< 2:17.3+dfsg1-5~), xbmc (<< 2:13.2+dfsg1-5~)
+Replaces: kodi-data (<< 2:17.3+dfsg1-5~), kodi-repository, xbmc (<< 2:13.2+dfsg1-5~)
+Provides: kodi-repository
+Multi-Arch: foreign
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-repository-kodi_21.3+dfsg-1.1~ubuntu26041_all.deb
+Size: 51628
+SHA256: 586fe273100159cdf50bde840e3c47f7bcdb4b1ed59bb2b8b9b8b49c59177fcd
+SHA1: 17b2021dbc470d2d8a12fc66c1c6b835a649a3bd
+MD5sum: b55bec4b4098780ca58a31b168280b20
+Description: Open Source Home Theatre (official addons repository feed)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package enables download of addons via the official Kodi
+ repository feed.
+
+Package: kodi-tools-texturepacker
+Source: kodi
+Version: 2:21.3+dfsg-1.1~ubuntu26041
+Architecture: amd64
+Maintainer: Debian Multimedia Maintainers <debian-multimedia@lists.debian.org>
+Installed-Size: 138
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libgif7 (>= 5.1), libjpeg8 (>= 8c), liblzo2-2 (>= 2.02), libpng16-16t64 (>= 1.6.46), libstdc++6 (>= 5.2)
+Breaks: kodi-bin (<< 2:19.4+dfsg1-1~)
+Replaces: kodi-bin (<< 2:19.4+dfsg1-1~)
+Homepage: https://kodi.tv/
+Priority: optional
+Section: video
+Filename: pool/main/k/kodi/kodi-tools-texturepacker_21.3+dfsg-1.1~ubuntu26041_amd64.deb
+Size: 46292
+SHA256: 5e70004b43c1e071b45a1b9ebf210873100b6d29693f2909568532741bd125e4
+SHA1: bf10a9b9c6d48962ef52ef403dc30b2f013fe69c
+MD5sum: 5dbd6869c19053545b796da8fd2947f1
+Description: Open Source Home Theatre (TexturePacker skin development tool)
+ Kodi, formerly known as XBMC is an award winning free and
+ open source software media-player and entertainment hub for all your digital
+ media. Kodi is available for Linux, Mac OS X (Leopard, Tiger and Apple TV)
+ and Microsoft Windows, as well as the original Xbox game console. Created in
+ 2003 by a group of like minded programmers, Kodi is a non-profit project run
+ and developed by volunteers located around the world. More than 50 software
+ developers have contributed to Kodi, and 100-plus translators have worked to
+ expand its reach, making it available in more than 30 languages.
+ .
+ While Kodi functions very well as a standard media player application for
+ your computer, it has been designed to be the perfect companion for your
+ HTPC. Supporting an almost endless range of remote controls, and combined
+ with its beautiful interface and powerful skinning engine, Kodi feels very
+ natural to use from the couch and is the ideal solution for your home
+ theater. Once installed, your computer will become a fully functional
+ multimedia jukebox.
+ .
+ This package contains TexturePacker, the tool for Kodi skin developers.
+ End users don't need this package to run Kodi.
+
