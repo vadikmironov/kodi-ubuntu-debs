@@ -4,34 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# shellcheck source=../VERSION
-source "$REPO_ROOT/VERSION"
+# Resolves UBUNTU_VERSION, UBUNTU_CODENAME and UBUNTU_BUILD (see VERSION).
+# shellcheck source=common.sh
+source "$SCRIPT_DIR/common.sh"
 
-# Rebuild counter (see VERSION). Default to 1 for older VERSION files.
-UBUNTU_BUILD="${UBUNTU_BUILD:-1}"
-
-# Detect Ubuntu version: env var takes precedence, then auto-detect from runner
-UBUNTU_VERSION="${UBUNTU_VERSION:-$(lsb_release -rs 2>/dev/null || echo "")}"
-if [ -z "$UBUNTU_VERSION" ]; then
-    echo "Error: cannot detect Ubuntu version. Set UBUNTU_VERSION env var." >&2
-    exit 1
-fi
-
-# Map version number to Debian distribution codename.
-# For new releases not listed here, set UBUNTU_CODENAME env var explicitly.
-case "$UBUNTU_VERSION" in
-    24.04) UBUNTU_CODENAME="noble" ;;
-    *)
-        UBUNTU_CODENAME="${UBUNTU_CODENAME:-}"
-        if [ -z "$UBUNTU_CODENAME" ]; then
-            echo "Error: no codename mapping for Ubuntu ${UBUNTU_VERSION}." >&2
-            echo "Set UBUNTU_CODENAME env var (e.g. UBUNTU_CODENAME=plucky)" >&2
-            exit 1
-        fi
-        ;;
-esac
-
-UBUNTU_VERSION_NODOT="${UBUNTU_VERSION//.}"
 SOURCE_DIR="$REPO_ROOT/build/kodi-${KODI_VERSION}+dfsg"
 
 echo "Patching for Ubuntu ${UBUNTU_VERSION} (${UBUNTU_CODENAME})"
@@ -42,11 +18,8 @@ if [ ! -d "$SOURCE_DIR" ]; then
     exit 1
 fi
 
+# Optional: a release whose packaging needs no changes has no patch directory.
 PATCH_DIR="$REPO_ROOT/patches/ubuntu-${UBUNTU_VERSION}"
-if [ ! -d "$PATCH_DIR" ]; then
-    echo "Error: no patch directory found for Ubuntu ${UBUNTU_VERSION}: $PATCH_DIR" >&2
-    exit 1
-fi
 
 # --- Step 1: Conditionally unapply Debian patches that are incompatible with
 # this Ubuntu release. This MUST happen before our patches modify the
@@ -64,13 +37,14 @@ case "$UBUNTU_VERSION" in
         fi
         ;;
     *)
-        echo "Skipping ffmpeg7 patch unapply (Ubuntu ${UBUNTU_VERSION} may ship ffmpeg 7.x — verify)."
+        echo "Keeping Debian ffmpeg7 patch (Ubuntu ${UBUNTU_VERSION} ships ffmpeg >= 7)."
         ;;
 esac
 
 # --- Step 2: Apply Ubuntu-specific patches to the debian/ directory.
 # These patches modify debian/control (dependency names) and debian/patches/series
 # (removing references to patches we unapplied in step 1).
+[ -d "$PATCH_DIR" ] || echo "No Ubuntu ${UBUNTU_VERSION} packaging patches."
 for patch in "$PATCH_DIR/"*.patch; do
     [ -f "$patch" ] || continue
     patchname=$(basename "$patch")

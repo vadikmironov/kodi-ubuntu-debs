@@ -4,17 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# shellcheck source=../VERSION
-source "$REPO_ROOT/VERSION"
-
-# Detect Ubuntu version: env var takes precedence, then auto-detect from runner.
-# Export so child scripts (patch-for-ubuntu.sh) inherit it.
-UBUNTU_VERSION="${UBUNTU_VERSION:-$(lsb_release -rs 2>/dev/null || echo "")}"
-if [ -z "$UBUNTU_VERSION" ]; then
-    echo "Error: cannot detect Ubuntu version. Set UBUNTU_VERSION env var." >&2
-    exit 1
-fi
-export UBUNTU_VERSION
+# Resolves and exports UBUNTU_VERSION, so the child scripts build the same
+# target release even when it is set explicitly rather than auto-detected.
+# shellcheck source=common.sh
+source "$SCRIPT_DIR/common.sh"
 
 SUDO=""
 [ "$(id -u)" != "0" ] && SUDO="sudo"

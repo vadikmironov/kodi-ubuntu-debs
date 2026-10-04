@@ -4,8 +4,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# shellcheck source=../VERSION
-source "$REPO_ROOT/VERSION"
+# Resolves UBUNTU_VERSION, DEBIAN_REVISION and SNAPSHOT_TIMESTAMP for the
+# target release (each Ubuntu release may rebuild a different Debian revision).
+# shellcheck source=common.sh
+source "$SCRIPT_DIR/common.sh"
 
 DSC_FILE="kodi_${KODI_VERSION}+dfsg-${DEBIAN_REVISION}.dsc"
 POOL_URL="https://deb.debian.org/debian/pool/main/k/kodi/${DSC_FILE}"
@@ -14,11 +16,10 @@ POOL_URL="https://deb.debian.org/debian/pool/main/k/kodi/${DSC_FILE}"
 # pool (e.g. 21.3+dfsg-1 was replaced by the NMU -1.1), which makes the pool
 # dget 404. snapshot.debian.org archives every upload permanently, so we fetch
 # the exact pinned revision from there when the pool no longer carries it.
-# SNAPSHOT_TIMESTAMP only needs to be a point when this revision was in the
-# archive — the .dsc is GPG-signed and pins each component's SHA256, so the
-# bytes are identical to the original pool upload regardless of the snapshot
-# chosen (verified: same .dsc sha256 as the source the .1-.3 releases built).
-SNAPSHOT_TIMESTAMP="${SNAPSHOT_TIMESTAMP:-20260201T000000Z}"
+# SNAPSHOT_TIMESTAMP (per release, in VERSION) only needs to be a point when
+# this revision was in the archive — the .dsc is GPG-signed and pins each
+# component's SHA256, so the bytes are identical to the original pool upload
+# regardless of the snapshot chosen.
 SNAPSHOT_URL="https://snapshot.debian.org/archive/debian/${SNAPSHOT_TIMESTAMP}/pool/main/k/kodi/${DSC_FILE}"
 
 KEYRING="/usr/share/keyrings/debian-keyring.gpg"
@@ -34,7 +35,7 @@ fi
 mkdir -p "$REPO_ROOT/build"
 cd "$REPO_ROOT/build"
 
-echo "Fetching Debian source: kodi ${KODI_VERSION}+dfsg-${DEBIAN_REVISION}"
+echo "Fetching Debian source: kodi ${KODI_VERSION}+dfsg-${DEBIAN_REVISION} (for Ubuntu ${UBUNTU_VERSION})"
 
 # dget without -u verifies the GPG signature against the installed keyrings
 # before extracting — will abort if signature is invalid or untrusted. Try the

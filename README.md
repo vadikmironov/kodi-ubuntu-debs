@@ -13,11 +13,11 @@ The official Kodi PPA has been abandoned and no longer publishes packages for cu
 | Ubuntu | Kodi this repo builds | Ubuntu's stock Kodi | Status |
 |--------|----------------------|---------------------|--------|
 | 24.04 LTS (Noble) | 21.3 (Omega) + upstream backports | 20.5 (Nexus) | Supported |
-| 26.04 LTS (Resolute) | 22 (Piers) — once it reaches Debian | 21.3 (Omega) | Planned |
+| 26.04 LTS (Resolute) | 21.3 (Omega) + upstream backports | 21.3 (Omega) | Supported |
 
 **24.04** ships only Kodi 20 in its own repos, so this repo's 21.3 packages are a real upgrade — and they carry upstream bug fixes backported on top (e.g. the PipeWire audio-settings deadlock fix).
 
-**26.04** already ships Kodi 21.3 in `universe`, so if 21.3 is all you need, just `sudo apt install kodi` — this repo adds nothing there yet. The plan for 26.04 is to ship **Kodi 22 (Piers)** as soon as it lands in Debian. As of this writing Kodi 22 is still in alpha (FFmpeg 8) and not yet in Debian, so 26.04 builds haven't started.
+**26.04** ships Kodi 21.3 in `universe`, but without those backported fixes. This repo's 26.04 packages are versioned above Ubuntu's, so once the repository is added `apt` installs them instead. Kodi 22 (Piers) for 26.04 will follow once it reaches Debian.
 
 Only x86_64 (amd64) is supported. Building for other architectures (ARM64, i386) would require additional build matrix entries and architecture-specific patches.
 
@@ -28,9 +28,10 @@ Only x86_64 (amd64) is supported. Building for other architectures (ARM64, i386)
 curl -fsSL https://vadikmironov.github.io/kodi-ubuntu-debs/kodi-ubuntu-debs.gpg \
   | sudo tee /usr/share/keyrings/kodi-ubuntu-debs.gpg > /dev/null
 
-# Add the repository (replace "noble" with your Ubuntu codename)
+# Add the repository for your release: noble (24.04) or resolute (26.04)
+CODENAME="$(. /etc/os-release && echo "$VERSION_CODENAME")"
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/kodi-ubuntu-debs.gpg] \
-  https://vadikmironov.github.io/kodi-ubuntu-debs noble main" \
+  https://vadikmironov.github.io/kodi-ubuntu-debs $CODENAME main" \
   | sudo tee /etc/apt/sources.list.d/kodi-ubuntu-debs.list > /dev/null
 
 # Install Kodi
@@ -68,7 +69,7 @@ bash scripts/build.sh
 The target Ubuntu version is auto-detected from `lsb_release`. To build for a specific version explicitly:
 
 ```bash
-UBUNTU_VERSION=24.04 bash scripts/build.sh
+UBUNTU_VERSION=26.04 bash scripts/build.sh
 ```
 
 Packages are written to `output/` when the build completes.
@@ -77,10 +78,12 @@ Packages are written to `output/` when the build completes.
 
 The repository contains no Kodi source code. At build time:
 
-1. `scripts/fetch-source.sh` downloads the Debian source package (`kodi_21.3+dfsg-1.dsc`) from the official Debian archive using `dget`, which verifies the GPG signature against the Debian keyring and extracts with `dpkg-source`. The signature details are printed to the build log via an explicit `dscverify` call.
-2. `scripts/patch-for-ubuntu.sh` conditionally unapplies Debian patches incompatible with the target Ubuntu release (via `quilt pop`), then applies patches from `patches/ubuntu-<version>/` to the `debian/` metadata. Current patches for Ubuntu 24.04:
+1. `scripts/fetch-source.sh` downloads the Debian source package pinned for the target release in `VERSION` (24.04: `kodi_21.3+dfsg-1.dsc`; 26.04: `-1.1`, which adds FFmpeg 8 support) from the official Debian archive using `dget`, which verifies the GPG signature against the Debian keyring and extracts with `dpkg-source`. The signature details are printed to the build log via an explicit `dscverify` call.
+2. `scripts/patch-for-ubuntu.sh` conditionally unapplies Debian patches incompatible with the target Ubuntu release (via `quilt pop`), then applies patches from `patches/ubuntu-<version>/` to the `debian/` metadata. Current patches for Ubuntu 24.04 (26.04 needs none):
    - **`control.patch`** — renames `libtag-dev` to `libtag1-dev` (Ubuntu's package name differs from Debian's)
    - **`series.patch`** — removes the Debian `0004-ffmpeg7.patch` from the patch series, since that patch requires ffmpeg 7.x but Ubuntu 24.04 ships ffmpeg 6.1.1, which already satisfies Kodi 21's original requirements
+
+   It then adds the upstream Kodi fixes from `patches/backports/` (same for every release) to the quilt series.
 3. `scripts/build.sh` installs build dependencies and runs `dpkg-buildpackage` to produce the `.deb` files.
 
 ## Releasing
@@ -88,30 +91,24 @@ The repository contains no Kodi source code. At build time:
 Each Ubuntu release gets its own tag, using the format `v<KODI_VERSION>-<DEBIAN_REVISION>ubuntu<DISTRO>.<BUILD>`:
 
 ```bash
-git tag v21.3-1ubuntu2404.1   # Ubuntu 24.04 build
-git tag v21.3-1ubuntu2604.1   # Ubuntu 26.04 build (when available)
+git tag v21.3-1ubuntu2404.4     # Ubuntu 24.04, Debian -1, build 4
+git tag v21.3-1.1ubuntu2604.1   # Ubuntu 26.04, Debian -1.1, build 1
 git push --tags
 ```
 
-A tag push triggers the release job, which creates a GitHub Release with the `.deb` files, `SHA256SUMS`, and per-distro build logs attached.
+`<BUILD>` matches that release's `UBUNTU_BUILD_<NODOT>` in `VERSION`. A tag push builds and publishes only its own Ubuntu release: a GitHub Release with the `.deb` files, `SHA256SUMS` and the build log, plus the matching suite of the apt repository.
 
 ## Contributing
 
-Fork the repo, make your changes, and push — GitHub Actions builds automatically. Keep patches minimal: they should only touch `debian/` metadata, never Kodi source code.
+Fork the repo, make your changes, and push — GitHub Actions builds automatically. Keep patches minimal: `patches/ubuntu-<version>/` only touches `debian/` metadata, and Kodi source changes are limited to upstream fixes backported in `patches/backports/`.
 
 ### Adding a new Ubuntu release
 
-1. Create `patches/ubuntu-<version>/` (e.g. `patches/ubuntu-26.04/`) with patches for that release
-2. Add the new version to the matrix in `.github/workflows/build.yml`:
-   ```yaml
-   ubuntu-version: ['24.04', '26.04']
-   ```
-3. Add the codename mapping to `scripts/patch-for-ubuntu.sh`:
-   ```bash
-   26.04) UBUNTU_CODENAME="<codename>" ;;
-   ```
-4. Review the ffmpeg `quilt pop` logic in `patch-for-ubuntu.sh` — if the new release ships ffmpeg 7.x, ensure the pop is skipped
-5. Document any release-specific pitfalls in `CLAUDE.md` and the Troubleshooting table below
+1. Add `DEBIAN_REVISION_<NODOT>`, `SNAPSHOT_TIMESTAMP_<NODOT>` and `UBUNTU_BUILD_<NODOT>=1` to `VERSION`
+2. Add the codename mapping to `scripts/common.sh`
+3. In `.github/workflows/build.yml`: add the version to `ALL` in the `setup` job, and add a codename mapping and a reprepro stanza to the `update-apt-repo` job
+4. Only if its packaging needs changes, create `patches/ubuntu-<version>/`, and review the ffmpeg `quilt pop` logic in `patch-for-ubuntu.sh`
+5. Document any release-specific pitfalls in `AGENTS.md` and the Troubleshooting table below
 
 ## Troubleshooting
 
@@ -131,10 +128,11 @@ Edit the single `VERSION` file at the repo root:
 
 ```
 KODI_VERSION=21.3
-DEBIAN_REVISION=1
+DEBIAN_REVISION_2404=1        # plus SNAPSHOT_TIMESTAMP_2404, UBUNTU_BUILD_2404
+DEBIAN_REVISION_2604=1.1      # plus SNAPSHOT_TIMESTAMP_2604, UBUNTU_BUILD_2604
 ```
 
-Bump `KODI_VERSION` to the new point release (e.g. `21.4`) and push. GitHub Actions will pick it up automatically. If the new Debian source package has changed in ways that break the patches, the build log will make it clear what needs updating.
+Bump `KODI_VERSION` to the new point release (e.g. `21.4`), set each release's Debian revision, reset every `UBUNTU_BUILD_<NODOT>` to `1`, and push. GitHub Actions will pick it up automatically. If the new Debian source package has changed in ways that break the patches, the build log will make it clear what needs updating.
 
 ## Known limitations
 
@@ -148,6 +146,7 @@ This repository contains no Kodi application code. The only files here are:
 
 - Shell scripts that orchestrate the build
 - Small patches per Ubuntu release that modify build metadata only (`debian/control` and `debian/patches/series`) — not Kodi source code
+- Upstream Kodi fixes backported from newer Kodi releases (`patches/backports/`), each with a DEP-3 header naming the upstream pull request
 - A GitHub Actions workflow
 
 Kodi source is fetched at build time directly from the official Debian archive (`deb.debian.org`) and its GPG signature is verified against the Debian keyring. You can audit every patch in `patches/` — they are short and straightforward.
